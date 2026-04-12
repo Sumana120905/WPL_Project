@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Scheduling Simulator</title>
+</head>
+<body>
+    
+    <nav class="navbar">
+
+        <h1>CPU Scheduling Algorithms</h1>
+
+    </nav>
+
+    <section id="algorithm-section" class="section">
+
+        <h2>Select Algorithm</h2>
+
+        <select id="algorithm-select">
+
+            <option value="fcfs">FCFS</option>
+            <option value="sjf">SJF</option>
+            <option value="priority">Priority</option>
+            <option value="rr">Round Robin</option>
+        </select>
+
+        <div id="preemptive-container" class="input-controls" style="display: none;">
+            <label>Scheduling Type:</label>
+            <select id="preemptive-select">
+                <option value="non">Non-Preemptive</option>
+                <option value="pre">Preemptive</option>
+            </select>
+        </div>
+    </section>
+        
+        <!-- ================= INPUT SECTION ================= -->
+    <section id="input-section" class="section">
+
+        <h2>Process Input</h2>
+
+        <!-- Number of Processes -->
+        <div class="input-controls">
+            <label>Number of Processes:</label>
+            <input type="number" id="process-count" min="1">
+        </div>
+
+        <!-- Time Quantum (RR only) -->
+        <div class="input-controls" id="time-quantum-container" style="display: none;">
+            <label>Time Quantum:</label>
+            <input type="number" id="time-quantum">
+        </div>
+
+        <!-- Process Table -->
+        <div id="process-table-container">
+            <table id="process-table" border="1">
+                <thead>
+                    <tr>
+                        <th>Process</th>
+                        <th>Arrival Time</th>
+                        <th>Burst Time</th>
+                        <th id="priority-header" style="display:none;">Priority</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows generated using JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <button id="simulate-btn">Simulate</button>
+
+    </section>
+
+
+    <!-- ================= CONTROL SECTION ================= -->
+    <section id="control-section" class="section" style="display: none;">
+        <h2>Controls</h2>
+
+        <button id="start-btn">Start</button>
+        <button id="pause-btn">Pause</button>
+        <button id="reset-btn">Reset</button>
+    </section>
+
+
+    <!-- ================= GANTT CHART ================= -->
+    <section id="gantt-section" class="section" style="display: none;">
+        <h2>Gantt Chart</h2>
+
+        <div id="gantt-container" style="display: flex;">
+            <!-- Gantt blocks will be added here -->
+        </div>
+
+        <div id="timeline-container">
+            <!-- Time markers -->
+        </div>
+    </section>
+
+
+    <!-- ================= PROCESS RESULT TABLE ================= -->
+    <section id="result-table-section" class="section" style="display: none;">
+        <h2>Process Details</h2>
+
+        <table id="result-table" border="1">
+            <thead>
+                <tr>
+                    <th>Process</th>
+                    <th>AT</th>
+                    <th>BT</th>
+                    <th>CT</th>
+                    <th>TAT</th>
+                    <th>WT</th>
+                    <th>RT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Filled using JS -->
+            </tbody>
+        </table>
+    </section>
+
+
+    <!-- ================= METRICS ================= -->
+    <section id="metrics-section" class="section" style="display: none;">
+        <h2>System Metrics</h2>
+
+        <div class="metrics-cards">
+
+            <div class="card">
+                <h3>Average Waiting Time</h3>
+                <p id="avg-wt">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Average Turnaround Time</h3>
+                <p id="avg-tat">0</p>
+            </div>
+
+            <div class="card">
+                <h3>CPU Utilization</h3>
+                <p id="cpu-util">0%</p>
+            </div>
+
+            <div class="card">
+                <h3>Throughput</h3>
+                <p id="throughput">0</p>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ================= JS FILES ================= -->
+    <script src="js/form.js"></script>
+    <script src="js/gantt.js"></script>
+    <script src="js/metrics.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/algorithms.js"></script>
+
+</body>
+</html>
