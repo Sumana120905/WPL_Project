@@ -126,6 +126,9 @@ function runSimulation(data) {
 
     renderGantt(ganttData);
 
+    const result = calculateMetrics(data.processes, ganttData);
+    displayResults(result);
+
     document.getElementById("gantt-section").style.display = "block";
     document.getElementById("control-section").style.display = "block";
 }
