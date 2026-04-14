@@ -1,3 +1,26 @@
+async function sendToBackend(data) {
+
+    const response = await fetch("/api/simulate/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCSRFToken()
+        },
+        body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    console.log("BACKEND RESULT:", result);
+
+    renderGantt(result.gantt);
+    displayResultsFromBackend(result);
+
+    document.getElementById("gantt-section").style.display = "block";
+    document.getElementById("control-section").style.display = "block";
+}
+
+
 // Get elements
 const processCountInput = document.getElementById("process-count");
 const tableBody = document.querySelector("#process-table tbody");
@@ -8,68 +31,51 @@ const timeQuantumContainer = document.getElementById("time-quantum-container");
 const preemptiveContainer = document.getElementById("preemptive-container");
 
 
-// =======================
-// HANDLE ALGORITHM CHANGE
-// =======================
 algorithmSelect.addEventListener("change", () => {
     const algo = algorithmSelect.value;
 
-    // Show preemptive toggle only for SJF & Priority
     if (algo === "sjf" || algo === "priority") {
         preemptiveContainer.style.display = "block";
     } else {
         preemptiveContainer.style.display = "none";
     }
 
-    // Show priority column only for Priority algorithm
     if (algo === "priority") {
         priorityHeader.style.display = "table-cell";
     } else {
         priorityHeader.style.display = "none";
     }
 
-    // Show time quantum only for Round Robin
     if (algo === "rr") {
         timeQuantumContainer.style.display = "block";
     } else {
         timeQuantumContainer.style.display = "none";
     }
 
-    // Regenerate table if already filled
     generateTable(processCountInput.value);
 });
 
 
-// =======================
-// HANDLE PROCESS COUNT INPUT
-// =======================
 processCountInput.addEventListener("input", () => {
     const count = processCountInput.value;
     generateTable(count);
 });
 
 
-// =======================
-// GENERATE TABLE FUNCTION
-// =======================
 function generateTable(count) {
 
-    // Clear previous rows
     tableBody.innerHTML = "";
 
     const algo = algorithmSelect.value;
 
-    // Loop to create rows
     for (let i = 1; i <= count; i++) {
 
         const row = document.createElement("tr");
 
-        // Process ID column
         const processCell = document.createElement("td");
         processCell.innerText = "P" + i;
         row.appendChild(processCell);
 
-        // Arrival Time input
         const atCell = document.createElement("td");
         const atInput = document.createElement("input");
         atInput.type = "number";
@@ -77,7 +83,6 @@ function generateTable(count) {
         atCell.appendChild(atInput);
         row.appendChild(atCell);
 
-        // Burst Time input
         const btCell = document.createElement("td");
         const btInput = document.createElement("input");
         btInput.type = "number";
@@ -85,7 +90,6 @@ function generateTable(count) {
         btCell.appendChild(btInput);
         row.appendChild(btCell);
 
-        // Priority column (only if needed)
         if (algo === "priority") {
             const prCell = document.createElement("td");
             const prInput = document.createElement("input");
@@ -99,43 +103,6 @@ function generateTable(count) {
     }
 }
 
-function runSimulation(data) {
-
-    let ganttData = [];
-
-    if (data.algorithm === "fcfs") {
-        ganttData = fcfs(data.processes);
-    }
-    else if (data.algorithm === "sjf") {
-        if (data.type === "non") {
-            ganttData = sjfNonPreemptive(data.processes);
-        } else {
-            ganttData = sjfPreemptive(data.processes);
-        }
-    }
-    else if (data.algorithm === "priority") {
-        if (data.type === "non") {
-            ganttData = priorityNonPreemptive(data.processes);
-        } else {
-            ganttData = priorityPreemptive(data.processes);
-        }
-    }
-    else if (data.algorithm === "rr") {
-        ganttData = roundRobin(data.processes, Number(data.timeQuantum));
-    }
-
-    renderGantt(ganttData);
-
-    const result = calculateMetrics(data.processes, ganttData);
-    displayResults(result);
-
-    document.getElementById("gantt-section").style.display = "block";
-    document.getElementById("control-section").style.display = "block";
-}
-
-// =======================
-// COLLECT INPUT DATA
-// =======================
 
 const simulateBtn = document.getElementById("simulate-btn");
 
@@ -154,11 +121,10 @@ simulateBtn.addEventListener("click", () => {
 
         const process = {
             pid: "P" + (index + 1),
-            arrivalTime: Number(inputs[0].value),
-            burstTime: Number(inputs[1].value)
+            arrival: Number(inputs[0].value),   // "arrival" not "arrivalTime"
+            burst: Number(inputs[1].value)       // "burst" not "burstTime"
         };
 
-        // If priority exists
         if (algorithm === "priority") {
             process.priority = Number(inputs[2].value);
         }
@@ -174,7 +140,12 @@ simulateBtn.addEventListener("click", () => {
     };
 
     console.log("INPUT DATA:", data);
-
-    // TEMP → call dummy gantt renderer
-    runSimulation(data);
+    sendToBackend(data);
 });
+
+function getCSRFToken() {
+    return document.cookie
+        .split("; ")
+        .find(row => row.startsWith("csrftoken"))
+        ?.split("=")[1];
+}

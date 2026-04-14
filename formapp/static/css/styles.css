@@ -72,27 +72,53 @@ button:hover {
     background: #1d4ed8;
 }
 
-/* GANTT CHART */
 #gantt-container {
-    display: flex;
-    align-items: center;
-    margin-top: 15px;
+    display: inline-flex;
+    position: relative;
 }
 
+/* WRAPPER FIX */
+#gantt-wrapper {
+    display: inline-block;
+    overflow-x: auto;
+}
+
+/* IMPORTANT FIX */
 .gantt-block {
-    border: 1px solid #333;
-    padding: 10px;
+    box-sizing: border-box;   /* 🔥 VERY IMPORTANT */
+    border-right: 1px solid black;
     text-align: center;
     font-weight: bold;
-    color: #000;
+
+    padding: 0;               /* 🔥 REMOVE PADDING */
+    height: 50px;
+    line-height: 50px;        /* vertical centering */
 }
 
-/* TIMELINE */
+/* Timeline */
 #timeline-container {
+    position: relative;
+    height: 30px;
     margin-top: 5px;
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
+    width: fit-content;   /* 🔥 ADD THIS */
+}
+
+/* Marks */
+.timeline-mark {
+    position: absolute;
+    font-size: 14px;
+    transform: translateX(-50%);
+}
+
+/* Tick lines */
+.timeline-mark::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    width: 2px;
+    height: 8px;
+    background: black;
 }
 
 /* METRIC CARDS */

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <title>CPU Scheduling Simulator</title>
 </head>
 <body>
@@ -88,12 +89,14 @@
     <section id="gantt-section" class="section" style="display: none;">
         <h2>Gantt Chart</h2>
 
+        <div id="gantt-wrapper">
         <div id="gantt-container" style="display: flex;">
             <!-- Gantt blocks will be added here -->
         </div>
 
         <div id="timeline-container">
             <!-- Time markers -->
+        </div>
         </div>
     </section>
 
@@ -152,11 +155,9 @@
 
 
     <!-- ================= JS FILES ================= -->
-    <script src="js/form.js"></script>
-    <script src="js/gantt.js"></script>
-    <script src="js/metrics.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/algorithms.js"></script>
+    <script src="{% static 'js/form.js' %}"></script>
+    <script src="{% static 'js/gantt.js' %}"></script>
+    <script src="{% static 'js/metrics.js' %}"></script>
 
 </body>
 </html>
